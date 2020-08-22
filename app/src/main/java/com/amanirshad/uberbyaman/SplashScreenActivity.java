@@ -99,7 +99,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Toast.makeText(SplashScreenActivity.this, "User already registered", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SplashScreenActivity.this, "User already registered", Toast.LENGTH_SHORT).show();
+                    DriverInfoModel driverInfoModel = snapshot.getValue(DriverInfoModel.class);
+                    goToHomeActivity(driverInfoModel);
                 } else {
                     showRegisterayout();
                 }
@@ -110,6 +112,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Toast.makeText(SplashScreenActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void goToHomeActivity(DriverInfoModel driverInfoModel) {
+        Common.currentUser = driverInfoModel; //Init value
+
+        startActivity(new Intent(SplashScreenActivity.this, DriverHomeActivity.class));
+        finish();
     }
 
     private void showRegisterayout() {
@@ -157,6 +166,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         ).addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
+                    goToHomeActivity(model);
                 });
             }
         });
